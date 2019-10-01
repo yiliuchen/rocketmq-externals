@@ -18,11 +18,10 @@
 package org.apache.rocketmq.connect.kafka.connector;
 
 import io.openmessaging.KeyValue;
-import io.openmessaging.connect.runtime.common.ConnectKeyValue;
-import io.openmessaging.connect.runtime.config.RuntimeConfigDefine;
 import io.openmessaging.connector.api.Task;
 import io.openmessaging.connector.api.source.SourceConnector;
-import org.apache.rocketmq.connect.kafka.Config;
+import io.openmessaging.internal.DefaultKeyValue;
+import org.apache.rocketmq.connect.kafka.config.ConfigDefine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +45,7 @@ public class KafkaSourceConnector extends SourceConnector{
             log.info("connector verifyAndSetConfig: key:{}, value:{}", key, config.getString(key));
         }
 
-        for(String requestKey : Config.REQUEST_CONFIG){
+        for(String requestKey : ConfigDefine.REQUEST_CONFIG){
             if(!config.containsKey(requestKey)){
                 return "Request Config key: " + requestKey;
             }
@@ -85,17 +84,16 @@ public class KafkaSourceConnector extends SourceConnector{
 
         log.info("Source Connector taskConfigs enter");
         List<KeyValue> configs = new ArrayList<>();
-        int task_num = connectConfig.getInt(Config.TASK_NUM);
+        int task_num = connectConfig.getInt(ConfigDefine.TASK_NUM);
         log.info("Source Connector taskConfigs: task_num:" + task_num);
         for (int i=0; i < task_num; ++i) {
-            KeyValue config = new ConnectKeyValue();
-            config.put(Config.BOOTSTRAP_SERVER, connectConfig.getString(Config.BOOTSTRAP_SERVER));
-            config.put(Config.TOPICS, connectConfig.getString(Config.TOPICS));
-            config.put(Config.GROUP_ID, connectConfig.getString(Config.GROUP_ID));
+            KeyValue config = new DefaultKeyValue();
+            config.put(ConfigDefine.BOOTSTRAP_SERVER, connectConfig.getString(ConfigDefine.BOOTSTRAP_SERVER));
+            config.put(ConfigDefine.TOPICS, connectConfig.getString(ConfigDefine.TOPICS));
+            config.put(ConfigDefine.GROUP_ID, connectConfig.getString(ConfigDefine.GROUP_ID));
 
-            config.put(RuntimeConfigDefine.CONNECTOR_CLASS, connectConfig.getString(RuntimeConfigDefine.CONNECTOR_CLASS));
-            config.put(RuntimeConfigDefine.SOURCE_RECORD_CONVERTER, connectConfig.getString(RuntimeConfigDefine.SOURCE_RECORD_CONVERTER));
-            config.put(RuntimeConfigDefine.OMS_DRIVER_URL, connectConfig.getString(RuntimeConfigDefine.OMS_DRIVER_URL));
+            config.put(ConfigDefine.CONNECTOR_CLASS, connectConfig.getString(ConfigDefine.CONNECTOR_CLASS));
+            config.put(ConfigDefine.SOURCE_RECORD_CONVERTER, connectConfig.getString(ConfigDefine.SOURCE_RECORD_CONVERTER));
             configs.add(config);
         }
         return configs;

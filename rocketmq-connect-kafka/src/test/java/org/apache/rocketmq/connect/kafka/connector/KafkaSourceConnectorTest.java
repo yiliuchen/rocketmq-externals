@@ -19,7 +19,7 @@ package org.apache.rocketmq.connect.kafka.connector;
 
 import io.openmessaging.KeyValue;
 import io.openmessaging.internal.DefaultKeyValue;
-import org.apache.rocketmq.connect.kafka.Config;
+import org.apache.rocketmq.connect.kafka.config.ConfigDefine;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -31,7 +31,7 @@ public class KafkaSourceConnectorTest {
     public void verifyAndSetConfigTest() {
         KeyValue keyValue = new DefaultKeyValue();
 
-        for (String requestKey : Config.REQUEST_CONFIG) {
+        for (String requestKey : ConfigDefine.REQUEST_CONFIG) {
             assertEquals(connector.verifyAndSetConfig(keyValue), "Request config key: " + requestKey);
             keyValue.put(requestKey, requestKey);
         }
@@ -47,7 +47,7 @@ public class KafkaSourceConnectorTest {
     public void taskConfigsTest() {
         assertEquals(connector.taskConfigs().get(0), null);
         KeyValue keyValue = new DefaultKeyValue();
-        for (String requestKey : Config.REQUEST_CONFIG) {
+        for (String requestKey : ConfigDefine.REQUEST_CONFIG) {
             keyValue.put(requestKey, requestKey);
         }
         connector.verifyAndSetConfig(keyValue);
